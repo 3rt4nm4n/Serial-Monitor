@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Serial_Monitor"
         mc:Ignorable="d"
-        Title="Serial Monitor" Height="450" Width="425" ResizeMode="NoResize" Background="#FF456666" Icon="SM.ico">
+        Title="Serial Monitor" Height="450" Width="425" ResizeMode="NoResize" Background="#FF456666" Icon="SM.ico" WindowStartupLocation="CenterScreen">
     <Grid>
         <!--Richtextbox-->
-        <RichTextBox x:Name="SerialMonTextBox" HorizontalAlignment="Left" Height="250" Margin="10,51,0,0" VerticalAlignment="Top" Width="390" IsManipulationEnabled="False" FontFamily="Courier New" IsReadOnly="True" Background="White" SelectionBrush="#FF00D5EA">
+        <RichTextBox x:Name="SerialMonTextBox" HorizontalAlignment="Left" Height="250" Margin="10,51,0,0" VerticalAlignment="Top" Width="390" IsManipulationEnabled="False" FontFamily="Courier New" IsReadOnly="True" Background="White" SelectionBrush="#FF00D5EA" ScrollViewer.CanContentScroll="True" TextChanged="SerialMonTextBox_TextChanged">
             <FlowDocument/>
         </RichTextBox>
         <!--Comboboxes-->
@@ -24,9 +24,9 @@
         <!--Buttons-->
         <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="10,360,0,0" VerticalAlignment="Top" Width="79" Background="DarkSeaGreen" FontFamily="Courier New" FontWeight="Bold" Click="ConnectButton_Click" BorderBrush="Black" BorderThickness="2" IsEnabled="False"/>
         <Button x:Name="DisconnectButton" Content="Disconnect" HorizontalAlignment="Left" Margin="10,380,0,0" VerticalAlignment="Top" Width="79" Background="PaleVioletRed" FontFamily="Courier New" FontWeight="Bold" Click="DisconnectButton_Click" BorderThickness="2" BorderBrush="Black" IsEnabled="False"/>
-        <Button x:Name="SendButton" Content="Send" HorizontalAlignment="Left" Margin="344,361,0,0" VerticalAlignment="Top" Width="56" Background="DarkGray" FontFamily="Courier New" FontWeight="Bold" Height="18" BorderThickness="2" BorderBrush="Black" IsEnabled="False"/>
+        <Button x:Name="SendButton" Content="Send" HorizontalAlignment="Left" Margin="344,361,0,0" VerticalAlignment="Top" Width="56" Background="DarkGray" FontFamily="Courier New" FontWeight="Bold" Height="18" BorderThickness="2" BorderBrush="Black" IsEnabled="False" Click="SendButton_Click"/>
         <!--Textboxes-->
-        <TextBox x:Name="InputTextBox" HorizontalAlignment="Left" Height="21" Margin="245,335,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="154"/>
+        <TextBox x:Name="InputTextBox" HorizontalAlignment="Left" Height="21" Margin="245,335,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="154" KeyDown="InputTextBox_KeyDown"/>
         <TextBox x:Name="BaudTextBox" HorizontalAlignment="Left" Height="22" Margin="94,334,0,0" TextWrapping="NoWrap" Text="9600" VerticalAlignment="Top" Width="67" FontFamily="Consolas" FontSize="18"/>
         <TextBox x:Name="DataBitsTextBox" HorizontalAlignment="Left" Height="22" Margin="166,334,0,0" TextWrapping="NoWrap" Text="8" VerticalAlignment="Top" Width="67" FontFamily="Consolas" FontSize="18"/>
         <!--Labels-->

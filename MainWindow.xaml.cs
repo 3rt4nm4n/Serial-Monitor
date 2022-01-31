@@ -13,15 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
+using System.Threading;
 
 namespace Serial_Monitor
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
-        public SerialPort sp = new SerialPort("COM1", 9600);//Default value
+        public static SerialPort sp = new SerialPort("COM1", 9600);//Default value
         public RichTextBox rbx = new RichTextBox();
         public MainWindow()
         {
@@ -86,7 +85,7 @@ namespace Serial_Monitor
 
         public void PrintCurrentTİme()
         {
-            SerialMonTextBox.AppendText("[" + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "] ");
+            SerialMonTextBox.AppendText("\n[" + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "] ");
         }
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
@@ -96,11 +95,18 @@ namespace Serial_Monitor
             var p = ParityHandler(PortsComboBox);
             var d = Convert.ToInt32(DataBitsTextBox.Text);
             sp = new SerialPort(portname, Convert.ToInt32(BaudTextBox.Text), p,d,s);
-            sp.Open();
-            if (sp.IsOpen)
+            try
             {
-                PrintCurrentTİme();
-                SerialMonTextBox.AppendText("Connected!\n");
+                sp.Open();
+                if (sp.IsOpen)
+                {
+                    PrintCurrentTİme();
+                    SerialMonTextBox.AppendText("Connected!");
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("Access to the port is denied. The port may be already in use. Try again later.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
                 
             ConnectButton.IsEnabled = false;
@@ -124,7 +130,8 @@ namespace Serial_Monitor
             if (!sp.IsOpen)
             {
                 PrintCurrentTİme();
-                SerialMonTextBox.AppendText("Disconnected!\n");
+                SerialMonTextBox.AppendText("Disconnected!");
+               
             }
                 
             ConnectButton.IsEnabled = true;
@@ -134,6 +141,38 @@ namespace Serial_Monitor
             StopBitsComboBox.IsEnabled = true;
             ParityComboBox.IsEnabled = true;
             PortsComboBox.IsEnabled = true;
+            Thread.Sleep(1500);
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            sp.Write(InputTextBox.Text);
+            PrintCurrentTİme();
+            SerialMonTextBox.AppendText("Input:"+InputTextBox.Text);
+            Thread.Sleep(200);
+            InputTextBox.Text = "";
+        }
+        private void SerialPort_DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            sp = (SerialPort)sender;
+            string id = sp.ReadExisting();
+            PrintCurrentTİme();
+            SerialMonTextBox.AppendText("Output:" + id);
+        }
+
+        private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                SendButton_Click(sender, e);
+            }
+        }
+
+        private void SerialMonTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SerialMonTextBox.ScrollToEnd();
+
+
         }
     }
 }
