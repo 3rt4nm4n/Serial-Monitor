@@ -44,6 +44,7 @@
             <ComboBoxItem Content="Two"/>
             <ComboBoxItem Content="One.Five"/>
         </ComboBox>
+        <Button x:Name="RestartButton" Content="Restart" HorizontalAlignment="Left" Margin="344,386,0,0" VerticalAlignment="Top" Width="56" Background="#FF1791D0" FontFamily="Courier New" FontWeight="Bold" Click="RestartButton_Click"/>
 
 
     </Grid>

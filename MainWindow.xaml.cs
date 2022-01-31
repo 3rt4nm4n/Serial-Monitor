@@ -174,5 +174,11 @@ namespace Serial_Monitor
 
 
         }
+
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+            System.Diagnostics.Process.Start(Environment.GetCommandLineArgs()[0]);
+        }
     }
 }
