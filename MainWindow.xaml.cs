@@ -14,10 +14,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
+using Microsoft.Xaml.Behaviors.Core;
 
 namespace Serial_Monitor
 {
-
+    
     public partial class MainWindow : Window
     {
         public static SerialPort sp = new SerialPort("COM1", 9600);//Default value
@@ -26,14 +27,15 @@ namespace Serial_Monitor
         {
             InitializeComponent();
             string[] ports = SerialPort.GetPortNames();
-            
             foreach (var p in ports)
             {
                 string[] prt = p.Split();
                 PortsComboBox.Items.Add(prt[0]);
             }
-            SerialMonTextBox.AppendText("["+DateTime.Now.Hour+":"+DateTime.Now.Minute+ ":" + DateTime.Now.Second+"] "+"Please choose the port name...");
+            
+            SerialMonTextBox.AppendText("["+DateTime.Now.Hour+":"+DateTime.Now.Minute+ ":" + DateTime.Now.Second+"] "+"Please choose the port name... if you cannot see, restart the program.");
         }
+
 
         private void PortsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -83,10 +85,12 @@ namespace Serial_Monitor
             }
         }
 
-        public void PrintCurrentTİme()
+        public void PrintCurrentTime()
         {
             SerialMonTextBox.AppendText("\n[" + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "] ");
         }
+
+
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -100,8 +104,10 @@ namespace Serial_Monitor
                 sp.Open();
                 if (sp.IsOpen)
                 {
-                    PrintCurrentTİme();
+
+                    PrintCurrentTime();
                     SerialMonTextBox.AppendText("Connected!");
+
                 }
             }
             catch (UnauthorizedAccessException)
@@ -110,13 +116,22 @@ namespace Serial_Monitor
             }
                 
             ConnectButton.IsEnabled = false;
+            Thread.Sleep(100);
             BaudTextBox.IsEnabled = false;
+            Thread.Sleep(100);
             DisconnectButton.IsEnabled = true;
+            Thread.Sleep(100);
             DataBitsTextBox.IsEnabled = false;
+            Thread.Sleep(100);
             StopBitsComboBox.IsEnabled = false;
+            Thread.Sleep(100);
             ParityComboBox.IsEnabled = false;
+            Thread.Sleep(100);
             PortsComboBox.IsEnabled = false;
-            
+            Thread.Sleep(100);
+   
+                
+
         }
 
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
@@ -129,37 +144,47 @@ namespace Serial_Monitor
             sp.Close();
             if (!sp.IsOpen)
             {
-                PrintCurrentTİme();
+                PrintCurrentTime();
                 SerialMonTextBox.AppendText("Disconnected!");
                
             }
                 
             ConnectButton.IsEnabled = true;
+            Thread.Sleep(100);
             SendButton.IsEnabled = false;
+            Thread.Sleep(100);
             BaudTextBox.IsEnabled = true;
+            Thread.Sleep(100);
             DataBitsTextBox.IsEnabled = true;
+            Thread.Sleep(100);
             StopBitsComboBox.IsEnabled = true;
+            Thread.Sleep(100);
             ParityComboBox.IsEnabled = true;
+            Thread.Sleep(100);
             PortsComboBox.IsEnabled = true;
-            Thread.Sleep(1500);
+            Thread.Sleep(100);
+
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
             sp.Write(InputTextBox.Text);
-            PrintCurrentTİme();
+            PrintCurrentTime();
             SerialMonTextBox.AppendText("Input:"+InputTextBox.Text);
             Thread.Sleep(200);
             InputTextBox.Text = "";
         }
+        
+
+
         private void SerialPort_DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
             sp = (SerialPort)sender;
             string id = sp.ReadExisting();
-            PrintCurrentTİme();
+            PrintCurrentTime();
             SerialMonTextBox.AppendText("Output:" + id);
         }
-
+        
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
@@ -178,7 +203,41 @@ namespace Serial_Monitor
         private void RestartButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+            Thread.Sleep(100);
             System.Diagnostics.Process.Start(Environment.GetCommandLineArgs()[0]);
         }
+
+        private void Window_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sp.IsOpen) { 
+            string id = sp.ReadExisting();
+            PrintCurrentTime();
+            SerialMonTextBox.AppendText("Output:" + id);
+            }
+        }
+        private ICommand command;
+        public ICommand FontSizeIncrease
+        {
+            get
+            {
+                return command
+                ?? (command = new ActionCommand(() =>
+                 {
+                     SerialMonTextBox.FontSize += 1;
+                 }));
+            }
+        }
+        public ICommand FontSizeDecrease
+        {
+            get
+            {
+                return command
+                    ?? (command = new ActionCommand(() =>
+                      {
+                          SerialMonTextBox.FontSize -= 1;
+                      }));
+            }
+        }
     }
+    
 }
