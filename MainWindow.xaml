@@ -14,7 +14,7 @@
     </Window.InputBindings>
     <Grid>
         <!--Richtextbox-->
-        <RichTextBox x:Name="SerialMonTextBox" HorizontalAlignment="Left" Height="250" Margin="10,50,0,0" VerticalAlignment="Top" Width="390" IsManipulationEnabled="False" FontFamily="Courier New" IsReadOnly="True" Background="White" SelectionBrush="#FF00D5EA" ScrollViewer.CanContentScroll="True" TextChanged="SerialMonTextBox_TextChanged">
+        <RichTextBox x:Name="SerialMonTextBox" HorizontalAlignment="Left" Height="250" Margin="10,51,0,0" VerticalAlignment="Top" Width="390" IsManipulationEnabled="False" FontFamily="Courier New" IsReadOnly="True" Background="White" SelectionBrush="#FF00D5EA" ScrollViewer.CanContentScroll="True" TextChanged="SerialMonTextBox_TextChanged">
             <FlowDocument/>
         </RichTextBox>
         <!--Comboboxes-->
